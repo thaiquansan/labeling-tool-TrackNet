@@ -13,7 +13,7 @@ This is a Python-based GUI tool for labeling images with visibility status, coor
 
 ## Installation
 1. Clone the repository:
-git clone https://github.com/thaiquansan/labeling-tool.git
+git clone https://github.com/thaiquansan/labeling-tool-TrackNet.git
 
 2. Creating a Virtual environment:
 It is recommended to use a virtual environment to manage dependencies. Here's how to create and activate one:
