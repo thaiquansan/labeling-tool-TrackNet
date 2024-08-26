@@ -88,7 +88,7 @@ class LabelingTool:
         self.canvas.bind("<Button-5>", self.zoom_image_linux)
 
     def create_label_file(self, folder_path):
-        label_file_path = os.path.join(folder_path, 'labels.csv')
+        label_file_path = os.path.join(folder_path, 'label.csv')
         
         # Check if the label file already exists
         if not os.path.exists(label_file_path):
@@ -208,7 +208,7 @@ class LabelingTool:
                     break
             
             if not alert:
-                label_file_path = os.path.join(self.selected_folder, 'labels.csv')
+                label_file_path = os.path.join(self.selected_folder, 'label.csv')
                 with open(label_file_path, 'w', newline='') as csvfile:
                     writer = csv.writer(csvfile)
                     writer.writerow(['file name', 'visibility', 'x-coordinate', 'y-coordinate', 'status'])
