@@ -29,13 +29,13 @@ It is recommended to use a virtual environment to manage dependencies. Here's ho
     - Pillow (Python Imaging Library)
     - os
     - csv   
-You can install the required packages using pip:
+You can install the required packages using pip:   
 pip install tk pillow python-csv
 or   
 python3 -m pip install tk pillow python-csv
 
 Running the Tool:
-To run the tool, simply execute the LabelingTool class (depend on your system):
+To run the tool, simply execute the LabelingTool class (depend on your system):   
     python labeling_tool_windows.py   
     or   
     python labeling_tool_linux.py   
