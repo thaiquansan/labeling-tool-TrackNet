@@ -1,6 +1,7 @@
 # labeling-tool-for-TrackNet
 - Link to TrackNet project: https://github.com/yastrebksv/TrackNet
 - A labeling tool for TrackNet system write in Python
+
 ## Labeling Tool
 This is a Python-based GUI tool for labeling images with visibility status, coordinates, and status information. It is designed to be user-friendly and allows for zooming and panning within images. This tool can be particularly useful for tasks such as labeling objects in images for machine learning projects, where precise annotations are required.
 
@@ -27,13 +28,17 @@ It is recommended to use a virtual environment to manage dependencies. Here's ho
     - tkinter
     - Pillow (Python Imaging Library)
     - os
-    - csv
+    - csv   
 You can install the required packages using pip:
-pip install Pillow
+pip install tk pillow python-csv
+or   
+python3 -m pip install tk pillow python-csv
 
 Running the Tool:
-To run the tool, simply execute the LabelingTool class:
-    python labeling_tool.py
+To run the tool, simply execute the LabelingTool class (depend on your system):
+    python labeling_tool_windows.py   
+    or   
+    python labeling_tool_linux.py   
 
 ## Usage
 1. Loading Images:
