@@ -15,8 +15,6 @@ class LabelingTool:
         
         # Initialize variables
         self.selected_folder = None
-
-        # Initialize variables
         self.idx = 0
         self.imgs = []
         self.Visibility = []
@@ -86,6 +84,9 @@ class LabelingTool:
         self.canvas.bind("<Button-1>", self.image_click_callback)
         self.canvas.bind("<MouseWheel>", self.zoom_image)
 
+        # Track if image has been clicked
+        self.clicked = False
+
     def create_label_file(self, folder_path):
         label_file_path = os.path.join(folder_path, 'label.csv')
         
@@ -124,6 +125,9 @@ class LabelingTool:
         self.original_img = img
         self.update_image_display()
 
+        # Reset click tracker
+        self.clicked = False
+
     def update_image_display(self):
         # Resize image based on zoom level
         img = self.original_img.resize((int(1920 * self.zoom_level), int(1080 * self.zoom_level)), Image.Resampling.LANCZOS)
@@ -136,7 +140,7 @@ class LabelingTool:
             self.canvas.delete(self.circle)
             x = self.CoordinateX[self.idx] * self.zoom_level
             y = self.CoordinateY[self.idx] * self.zoom_level
-            self.circle = self.canvas.create_oval(x-2, y-2, x+2, y+2, fill='red', outline='red')
+            self.circle = self.canvas.create_oval(x-1, y-1, x+1, y+1, fill='red', outline='red')
 
     def zoom_image(self, event):
         if event.delta > 0:
@@ -151,20 +155,31 @@ class LabelingTool:
         self.CoordinateY[self.idx] = y
         self.canvas.delete(self.circle)
         self.circle = self.canvas.create_oval(event.x-2, event.y-2, event.x+2, event.y+2, fill='red', outline='red')
+        
+        # Mark image as clicked
+        self.clicked = True
+        self.Visibility[self.idx] = 1  # Set visibility status to "easy identification"
 
     def show_previous_image(self, event):
         if self.idx > 0:
+            if not self.clicked:
+                # If image was not clicked, set visibility status to "no ball"
+                self.Visibility[self.idx] = 0
             self.idx -= 1
             self.show_image()
             self.update_ui()
 
     def show_next_image(self, event):
         if self.idx < len(self.imgs) - 1:
+            if not self.clicked:
+                # If image was not clicked, set visibility status to "no ball"
+                self.Visibility[self.idx] = 0
             self.idx += 1
             self.show_image()
             self.update_ui()
 
     def update_visibility(self):
+        # Update visibility based on current selection
         self.Visibility[self.idx] = self.visibility_var.get()
         if self.Visibility[self.idx] == 0:
             self.flying_rb.config(state=tk.DISABLED)

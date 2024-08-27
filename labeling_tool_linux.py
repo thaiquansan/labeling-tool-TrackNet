@@ -1,7 +1,3 @@
-""" 
-Ubuntu Linux version
-"""
-
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from PIL import Image, ImageTk
@@ -24,6 +20,7 @@ class LabelingTool:
         self.CoordinateX = []
         self.CoordinateY = []
         self.circle = None
+        self.clicked = False  # Track whether an image has been clicked
 
         self.zoom_level = 1.0
         self.zoom_min = 0.5
@@ -38,6 +35,7 @@ class LabelingTool:
 
         self.canvas = tk.Canvas(self.frame, width=960, height=540)
         self.canvas.pack()
+        self.canvas.bind("<Button-1>", self.image_click_callback)  # Bind click event to canvas
 
         self.button_frame = tk.Frame(self.frame)
         self.button_frame.pack()
@@ -121,13 +119,13 @@ class LabelingTool:
 
     def show_image(self):
         img = Image.open(self.imgs[self.idx])
-        img = img.resize((1920, 1080), Image.Resampling.LANCZOS)
+        img = img.resize((1920, 1080), Image.ANTIALIAS)
         self.original_img = img
         self.update_image_display()
 
     def update_image_display(self):
         # Resize image based on zoom level
-        img = self.original_img.resize((int(1920 * self.zoom_level), int(1080 * self.zoom_level)), Image.Resampling.LANCZOS)
+        img = self.original_img.resize((int(1920 * self.zoom_level), int(1080 * self.zoom_level)), Image.ANTIALIAS)
         self.img_tk = ImageTk.PhotoImage(img)
         self.canvas.create_image(0, 0, anchor=tk.NW, image=self.img_tk)
         self.label2.config(text=self.imgs[self.idx])
@@ -137,7 +135,7 @@ class LabelingTool:
             self.canvas.delete(self.circle)
             x = self.CoordinateX[self.idx] * self.zoom_level
             y = self.CoordinateY[self.idx] * self.zoom_level
-            self.circle = self.canvas.create_oval(x-2, y-2, x+2, y+2, fill='red', outline='red')
+            self.circle = self.canvas.create_oval(x-1, y-1, x+1, y+1, fill='red', outline='red')
 
     # Adjust zoom_image method for Linux scroll event
     def zoom_image_linux(self, event):
@@ -148,6 +146,7 @@ class LabelingTool:
         self.update_image_display()
 
     def image_click_callback(self, event):
+        self.clicked = True
         x, y = event.x / self.zoom_level, event.y / self.zoom_level
         self.CoordinateX[self.idx] = x
         self.CoordinateY[self.idx] = y
@@ -156,15 +155,21 @@ class LabelingTool:
 
     def show_previous_image(self, event):
         if self.idx > 0:
+            if not self.clicked:
+                self.Visibility[self.idx] = 0  # Set visibility to 'no ball'
             self.idx -= 1
             self.show_image()
             self.update_ui()
+            self.clicked = False
 
     def show_next_image(self, event):
         if self.idx < len(self.imgs) - 1:
+            if not self.clicked:
+                self.Visibility[self.idx] = 0  # Set visibility to 'no ball'
             self.idx += 1
             self.show_image()
             self.update_ui()
+            self.clicked = False
 
     def update_visibility(self):
         self.Visibility[self.idx] = self.visibility_var.get()
